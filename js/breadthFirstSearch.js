@@ -20,7 +20,7 @@ var getMin = function(arrayC)
   return MIN;
 }
 
-var depthFirstSearch = function(game, depth, isMaximizingPlayer)
+var breadthFirstSearch = function(game, depth, isMaximizingPlayer)
   {
     //boardPosition = game.fen() which returns a new board  
     var possibleMoves = game.moves();
@@ -92,7 +92,7 @@ var depthFirstSearch = function(game, depth, isMaximizingPlayer)
         return [bestValue, 0];
       }
 
-      var bestMove = [-9999, -1];
+      var bestMove = [9999, -1];
       var bestMovesArray = [];
       for(var i = 0; i < possibleMoves.length; i++)
       {
@@ -104,7 +104,7 @@ var depthFirstSearch = function(game, depth, isMaximizingPlayer)
       console.log("best min moves array: ", bestMovesArray);
       for(var i = 0; i < possibleMoves.length; i++)
       {
-        if(bestMovesArray[i][0] > bestMove[0])
+        if(bestMovesArray[i][0] < bestMove[0])
         {
           bestMove[0] = bestMovesArray[i][0];
           bestMove[1] = i;
