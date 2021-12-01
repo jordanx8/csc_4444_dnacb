@@ -22,7 +22,7 @@ function getMinimaxMove(boardPosition, possibleMoves){
     // console.log("Possible moves for black: ", possibleMoves)
     // console.log("Converted value moves for black: \n", valuedMoves)
 
-    var bestMove = breadthFirstSearch(game, 2, false);
+    var bestMove = breadthFirstSearch2(game, 2, false);
     if(bestMove[1] < 0)
     {
       console.log(bestMove[1], possibleMoves[bestMove[1]])

@@ -20,7 +20,7 @@ var getMin = function(arrayC)
   return MIN;
 }
 
-var breadthFirstSearch = function(game, depth, isMaximizingPlayer)
+var breadthFirstSearch2 = function(game, depth, isMaximizingPlayer)
   {
     //boardPosition = game.fen() which returns a new board  
     var possibleMoves = game.moves();
@@ -32,58 +32,11 @@ var breadthFirstSearch = function(game, depth, isMaximizingPlayer)
       [0, 0, 0, 0, 0, 0, 0, 0], 
       [0, 0, 0, 0, 0, 0, 0, 0], 
       [0, 0, 0, 0, 0, 0, 0, 0]];
-    var totalEvaluation, bestValue;
-    var nextGames= []
-    var finalGames = [];
-    var valueMoves = [];
+    var totalEvaluation, valueMoves, bestValue;
+
     //this will be an array of moves converted to values; i.e.
     //from this: ["Kg6","Rh5","Rh4","Rh3","Be1"]
     //to this: ["10","0","50","90","-10"]
-
-    //Goal: find the max value for a given move in the array from it's child state spaces; 
-    //When completed, return the best move
-
-    for(i = 0; i < possibleMoves.length; i++)
-    {
-      game.move(possibleMoves[i]);
-      nextGames.push(game);
-      game.undo();
-    }
-    var finalGamesIndex = 0;
-    for(i = 0; i < nextGames.length; i++)
-    {
-      var nextPossibleMoves = nextGames[i].moves();
-      for(var j = 0; j < nextPossibleMoves.length; j++)
-      {
-        nextGames[i].move(nextPossibleMoves[j]);
-        finalGames.push(nextGames[i]);
-        nextGames[i].undo();
-        finalGamesIndex++;
-      }
-    }
-    var bestMove = [-9999, -1];
-    var bestMovesArray = [];
-    finalGamesIndex = 0;
-    for(i = 0; i < finalGames.length; i++)
-    {
-      totalEvaluation = evaluateBoard(finalGames[finalGamesIndex].board(), boardValues);
-      valueMoves.push(evaluateMoves(finalGames[finalGamesIndex], boardValues));
-      console.log("value moves: ",valueMoves);
-      bestMovesArray.push(getMax(valueMoves));
-      finalGamesIndex++;
-    }
-    console.log("final value Moves", valueMoves);
-
-    for(var i = 0; i < possibleMoves.length; i++)
-    {
-      if(bestMovesArray[i][0] > bestMove[0])
-      {
-        bestMove[0] = bestMovesArray[i][0];
-        bestMove[1] = i;
-      }
-    }
-    return bestMove;
-    
 
     //Goal: find the max value for a given move in the array from it's child state spaces; 
     //When completed, return the best move
@@ -102,18 +55,22 @@ var breadthFirstSearch = function(game, depth, isMaximizingPlayer)
       }
       var bestMove = [-9999, -1];
       var bestMovesArray = [];
+      var nextMove = [];
       for(var i = 0; i < possibleMoves.length; i++)
       {
           //Iterate to the next move
           game.move(possibleMoves[i]);
-          //Search node i in possiblemoves
-          valueMoves = evaluateMoves(game, boardValues);
-          bestValue = getMax(valueMoves);
-          bestMovesArray.push([bestValue, 0]);
+          var newGame = new Chess();
+          newGame = game;
+          nextMove.push(newGame);
           //undo the move to maintain the board state and move onto the next move
           game.undo();
       }
-      bestMovesArray.push(breadthFirstSearch(game, depth - 1, false));
+
+
+      for(var i = 0; i < nextMove.length; i++){
+        bestMovesArray.push(depthFirstSearch(nextMove[i], depth - 1, false));
+      }
       console.log("best max moves array: ", bestMovesArray);
       for(var i = 0; i < possibleMoves.length; i++)
       {
@@ -144,21 +101,20 @@ var breadthFirstSearch = function(game, depth, isMaximizingPlayer)
 
       var bestMove = [-9999, -1];
       var bestMovesArray = [];
+      var nextMove = [];
       for(var i = 0; i < possibleMoves.length; i++)
       {
           //Iterate to the next move
           game.move(possibleMoves[i]);
-          valueMoves = evaluateMoves(game, boardValues);
-          bestValue = getMax(valueMoves);
-          bestMovesArray.push([bestValue, 0]);
-          console.log("possible moves: ", possibleMoves);
+          var newGame = new Chess();
+          newGame = game;
+          nextMove.push(newGame);
+          //undo the move to maintain the board state and move onto the next move
           game.undo();
       }
-      for(var i = 0; i < possibleMoves.length; i++)
-      {
-        game.move(possibleMoves[i]);
-        bestMovesArray.push(breadthFirstSearch(game, depth - 1, true));
-        game.undo();
+      console.log("nextMoves: ",nextMove);
+      for(var i = 0; i < nextMove.length; i++){
+        bestMovesArray.push(depthFirstSearch(nextMove[i], depth - 1, true));
       }
       console.log("best min moves array: ", bestMovesArray);
       for(var i = 0; i < possibleMoves.length; i++)
@@ -174,5 +130,3 @@ var breadthFirstSearch = function(game, depth, isMaximizingPlayer)
         return bestMove;
     }
   }
-
-
