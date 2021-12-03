@@ -21,8 +21,7 @@ function getMinimaxMove(boardPosition, possibleMoves){
     // console.log("Board Value Matrix: ", boardValues)
     // console.log("Possible moves for black: ", possibleMoves)
     // console.log("Converted value moves for black: \n", valuedMoves)
-
-    var bestMove = breadthFirstSearch2(game, 2, false);
+    var bestMove = breadthFirstSearch(game, 2, false);
     if(bestMove[1] < 0)
     {
       console.log(bestMove[1], possibleMoves[bestMove[1]])
@@ -83,6 +82,7 @@ var getPieceValue = function (piece) {
 //i.e. instead of ['Ne6', 'Na6', ...], changes to ['-30', '0', ...]
 var evaluateMoves = function(game, boardValues)
 { 
+  console.log("evaluate");
   var possibleMoves = game.moves();
   var newMoves = []
   var invertDict = {0 : 7, 1:6, 2:5, 3:4, 4:3, 5:2, 6:1, 7:0 }
@@ -120,9 +120,10 @@ var evaluateMoves = function(game, boardValues)
     if(row == null)
       continue;
 
-    // console.log("Board move: ", possibleMoves[i][index], possibleMoves[i][index+1], ", ", "Matrix move: ", column, row, "Corresponding board value: ", boardValues[column][row])
+    console.log("Board move: ", possibleMoves[i][index], possibleMoves[i][index+1], ", ", "Matrix move: ", column, row, "Corresponding board value: ", boardValues[column][row])
     newMoves.push(boardValues[column][row]);
   }
+  console.log("newMoves",newMoves);
   return newMoves;
 };
 

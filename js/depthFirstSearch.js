@@ -111,7 +111,9 @@ var depthFirstSearch = function(game, depth, isMaximizingPlayer)
         }
         //console.log("best move overwritten: ", bestMove);
       }
-        console.log("best min move: ", bestMove);
+        console.log("possibleMoves ", possibleMoves);
+        console.log("game = ", game.pgn());
+        console.log("bestmove", bestMove);
         return bestMove;
     }
   }
